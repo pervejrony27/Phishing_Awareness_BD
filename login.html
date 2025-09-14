@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Signup — Phishing Awareness BD</title>
+  <!-- Shared main stylesheet for header/footer -->
+  <link rel="stylesheet" href="css/index.css">
+  <!-- Boxicons CDN -->
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  
+  <style>
+    :root {
+      --primary-color: #4EA685;
+      --secondary-color: #57B894;
+      --white: #ffffff;
+      --gray: #efefef;
+      --gray-2: #757575;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f4f6f8;
+      overflow-x: hidden;
+    }
+
+    .container {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      height: 100vh;
+    }
+
+    .col {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 28rem;
+    }
+
+    .form {
+      padding: 1rem;
+      background-color: var(--white);
+      border-radius: 1.5rem;
+      width: 100%;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      transform: scale(0);
+      transition: .5s ease-in-out;
+      transition-delay: 1s;
+    }
+
+    .input-group {
+      position: relative;
+      width: 100%;
+      margin: 1rem 0;
+    }
+
+    .input-group i {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      font-size: 1.4rem;
+      color: var(--gray-2);
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 1rem 3rem;
+      font-size: 1rem;
+      background-color: var(--gray);
+      border-radius: .5rem;
+      border: 0.125rem solid var(--white);
+      outline: none;
+    }
+
+    .input-group input:focus {
+      border: 0.125rem solid var(--primary-color);
+    }
+
+    .form button {
+      cursor: pointer;
+      width: 100%;
+      padding: .6rem 0;
+      border-radius: .5rem;
+      border: none;
+      background-color: var(--primary-color);
+      color: var(--white);
+      font-size: 1.2rem;
+      outline: none;
+    }
+
+    .form p {
+      margin: 1rem 0;
+      font-size: .8rem;
+      color: #333;
+    }
+
+    .pointer { cursor: pointer; color: var(--primary-color); }
+
+    .flex-col { flex-direction: column; }
+
+    /* Reveal the active form */
+    .container.sign-in .form.sign-in,
+    .container.sign-up .form.sign-up {
+      transform: scale(1);
+    }
+
+    /* Content Row */
+    .content-row {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 6;
+      width: 100%;
+      display: flex;
+    }
+
+    .content-row .col {
+      width: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .text {
+      margin: 4rem;
+      color: var(--white);
+      transition: opacity .35s ease;
+    }
+
+    .text.hidden {
+      opacity: 0;
+      pointer-events: none;
+      display: none;
+    }
+
+    .text h2 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 2rem 0;
+      transition: 1s ease-in-out;
+    }
+
+    /* Background Animation */
+    .container::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: 300vw;
+      transform: translate(35%, 0);
+      background-image: linear-gradient(-45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      transition: 1s ease-in-out;
+      z-index: 6;
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      border-bottom-right-radius: max(50vw, 50vh);
+      border-top-left-radius: max(50vw, 50vh);
+    }
+
+    .container.sign-in::before {
+      transform: translate(0, 0);
+      right: 50%;
+    }
+
+    .container.sign-up::before {
+      transform: translate(100%, 0);
+      right: 50%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Phishing Awareness BD</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="awareness.html">Awareness</a></li>
+      <li><a href="report.html">Report</a></li>
+      <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="login.html"class="active">Login/Signup</a></li>
+    </ul>
+  </nav>
+
+  <!-- Container -->
+  <div id="container" class="container">
+    <!-- FORM SECTION -->
+    <div class="row">
+      <!-- SIGN UP -->
+      <div class="col align-items-center flex-col sign-up">
+        <div class="form-wrapper align-items-center">
+          <div class="form sign-up">
+            <div class="input-group">
+              <i class='bx bxs-user'></i>
+              <input type="text" placeholder="Username">
+            </div>
+            <div class="input-group">
+              <i class='bx bx-mail-send'></i>
+              <input type="email" placeholder="Email">
+            </div>
+            <div class="input-group">
+              <i class='bx bxs-lock-alt'></i>
+              <input type="password" placeholder="Password">
+            </div>
+            <div class="input-group">
+              <i class='bx bxs-lock-alt'></i>
+              <input type="password" placeholder="Confirm password">
+            </div>
+            <button>Sign up</button>
+            <p>
+              <span>Already have an account?</span>
+              <b onclick="toggle()" class="pointer">Sign in here</b>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGN IN -->
+      <div class="col align-items-center flex-col sign-in">
+        <div class="form-wrapper align-items-center">
+          <div class="form sign-in">
+            <div class="input-group">
+              <i class='bx bxs-user'></i>
+              <input type="text" placeholder="Username">
+            </div>
+            <div class="input-group">
+              <i class='bx bxs-lock-alt'></i>
+              <input type="password" placeholder="Password">
+            </div>
+            <button>Sign in</button>
+            <p><b>Forgot password?</b></p>
+            <p>
+              <span>Don't have an account?</span>
+              <b onclick="toggle()" class="pointer">Sign up here</b>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT ROW -->
+    <div class="row content-row">
+      <div class="col align-items-center flex-col">
+        <div class="text sign-in" id="text-signin">
+          <h2>Welcome</h2>
+        </div>
+      </div>
+      <div class="col align-items-center flex-col">
+        <div class="text sign-up hidden" id="text-signup">
+          <h2>Join with us</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Phishing Awareness BD | Made in Bangladesh
+  </footer>
+
+  <script>
+    const container = document.getElementById('container');
+    const textSignIn = document.getElementById('text-signin'); // "Welcome"
+    const textSignUp = document.getElementById('text-signup'); // "Join with us"
+
+    // Show sign-in → show Welcome
+    function showSignIn() {
+      container.classList.add('sign-in');
+      container.classList.remove('sign-up');
+      textSignIn.classList.remove('hidden');   // show "Welcome"
+      textSignUp.classList.add('hidden');      // hide "Join with us"
+    }
+
+    // Show sign-up → show Join with us
+    function showSignUp() {
+      container.classList.add('sign-up');
+      container.classList.remove('sign-in');
+      textSignUp.classList.remove('hidden');   // show "Join with us"
+      textSignIn.classList.add('hidden');      // hide "Welcome"
+    }
+
+    // Toggle
+    function toggle() {
+      if (container.classList.contains('sign-in')) {
+        showSignUp();
+      } else {
+        showSignIn();
+      }
+    }
+
+    // Default: show sign-in
+    setTimeout(() => {
+      showSignIn();
+    }, 200);
+
+    window.toggle = toggle;
+  </script>
+
+</body>
+</html>

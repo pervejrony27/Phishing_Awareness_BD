@@ -1,0 +1,72 @@
+/* Fonts & base */
+body {
+  font-family: 'SolaimanLipi', 'Kalpurush', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  color: #222;
+}
+
+.page-content {
+  flex: 1; /* pushes footer to bottom */
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  padding: 15px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0d6efd;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  margin-left: auto;
+  gap: 28px;
+  padding: 0;
+}
+
+.nav-links a {
+  color: #495057;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color .2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #0d6efd;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 18px;
+  background: #343a40;
+  color: #fff;
+  font-size: 14px;
+  margin-top: auto;
+}
+
+/* Responsive */
+@media (max-width: 780px) {
+  .nav-links { gap: 14px; font-size: 14px; }
+}

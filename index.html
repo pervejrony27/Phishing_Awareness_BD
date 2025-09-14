@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Phishing Awareness BD</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=SolaimanLipi&family=Kalpurush&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">Phishing Awareness BD</div>
+       <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+       <li><a href="awareness.html">Awareness</a></li> 
+       <li><a href="report.html">Report</a></li>
+       <li><a href="quiz.html">Quiz</a></li>
+      <li><a href="login.html">Login/signUp</a></li>
+      </ul>
+
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>স্বাগতম Phishing Awareness BD-এ</h1>
+        <p>Learn to protect yourself from phishing scams in Bangladesh with reliable guides and reports.</p>
+        <div class="hero-buttons">
+            <a href="report.html" class="btn-primary">Report a Link</a>
+            <a href="quiz.html" class="btn-secondary">Take Quiz</a>
+        </div>
+    </section>
+
+    <!-- Scanner Section (embedded) -->
+    <section class="scanner-section" id="scanner">
+      <div class="container">
+        <div class="scanner-card">
+          <h2>Phishing Link Scanner</h2>
+          <p>Paste a suspicious URL below. The scanner will run quick checks and return a verdict plus teaching tips (English + বাংলা).</p>
+
+          <div class="scanner">
+            <input id="urlInput" type="text" placeholder="https://example.com/..." />
+            <button id="scanBtn" class="btn-primary">Scan Link</button>
+          </div>
+
+          <div id="result" class="result" aria-live="polite"></div>
+
+          <div class="notes small" style="margin-top:10px;">
+            <strong>Note:</strong> This is a rule-based scanner — for best results combine it with blacklist APIs (PhishTank / Google Safe Browsing) or ML models.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <!-- Features Section -->
+<section class="features">
+  <h1 class="section-title">Phishing Awareness</h1>
+  <div class="feature-cards">
+    <div class="feature-card">
+      
+      <h2><a href="awareness.html">Awareness</a></h2>
+      <p>Beware of messages asking for OTPs or banking info.</p>
+    </div>
+    <div class="feature-card">
+      <h2><a href="report.html">Report</a></h2>
+      <p>Check sender email carefully before clicking links.</p>
+    </div>
+    <div class="feature-card">
+      <h2><a href="quiz.html">Quiz</a></h2>
+      <p>Always verify URLs before entering sensitive info.</p>
+    </div>
+  </div>
+</section>
+
+
+
+    
+
+    <!-- Awareness Section -->
+    <section class="awareness" id="awareness">
+        <h2 class="section-title">Phishing Awareness</h2>
+        <div class="awareness-cards">
+            <div class="awareness-card">
+                <img src="images/sms.png" alt="SMS Phishing">
+                <h3>SMS Scams</h3>
+                <p>Beware of messages asking for OTPs or banking info.</p>
+            </div>
+            <div class="awareness-card">
+                <img src="images/email.png" alt="Email Phishing">
+                <h3>Email Scams</h3>
+                <p>Check sender email carefully before clicking links.</p>
+            </div>
+            <div class="awareness-card">
+                <img src="images/fake-site.png" alt="Fake Websites">
+                <h3>Fake Websites</h3>
+                <p>Always verify URLs before entering sensitive info.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="stats">
+        <div class="stat-card">
+            <h3>500+</h3>
+            <p>Reports Submitted</p>
+        </div>
+        <div class="stat-card">
+            <h3>2000+</h3>
+            <p>Users Protected</p>
+        </div>
+        <div class="stat-card">
+            <h3>1500+</h3>
+            <p>Quizzes Taken</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2025 Phishing Awareness BD | Made in Bangladesh
+    </footer>
+
+<script>
+  // Scanner JS - sends request to api/scan.php and renders response with English + Bangla tips
+  (function () {
+    const scanBtn = document.getElementById("scanBtn");
+    const urlInput = document.getElementById("urlInput");
+    const resultDiv = document.getElementById("result");
+
+    scanBtn.addEventListener("click", async () => {
+      const url = urlInput.value.trim();
+      if (!url) {
+        resultDiv.innerHTML = '<div class="error">Please enter a URL to scan.</div>';
+        return;
+      }
+      resultDiv.innerHTML = "<em>Scanning...</em>";
+      try {
+        const resp = await fetch("api/scan.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
+        });
+
+        if (!resp.ok) {
+          // try to decode message
+          const txt = await resp.text();
+          throw new Error("Server error: " + resp.status + " — " + txt);
+        }
+        const data = await resp.json();
+
+        // Choose verdict color class
+        let verdictClass = "safe";
+        if (data.verdict === "Likely Phishing") verdictClass = "phishing";
+        else if (data.verdict === "Suspicious") verdictClass = "suspicious";
+
+        // Render result header
+        let html = `<div class="result-head"><span class="label">Verdict:</span> <strong class="verdict ${verdictClass}">${escapeHtml(data.verdict)}</strong></div>`;
+        html += `<div class="result-score">Score: <strong>${escapeHtml(String(data.score))}</strong></div>`;
+
+        // Render reasons (each reason has English and Bangla)
+        if (Array.isArray(data.reasons) && data.reasons.length) {
+          html += `<div class="why-title"><strong>Why this is suspicious / কেন এটা সন্দেহজনক:</strong></div>`;
+          html += `<ul class="result-list">`;
+          data.reasons.forEach(r => {
+            // r is expected {en: "...", bn: "..."}
+            const en = r.en ? r.en : "";
+            const bn = r.bn ? r.bn : "";
+            html += `<li><div class="reason-en">${escapeHtml(en)}</div><div class="reason-bn">${escapeHtml(bn)}</div></li>`;
+          });
+          html += `</ul>`;
+        }
+
+        // Meta details
+        if (data.host) {
+          html += `<div class="result-meta"><small>Host: ${escapeHtml(data.host)}</small></div>`;
+        }
+
+        resultDiv.innerHTML = html;
+        // scroll to result
+        resultDiv.scrollIntoView({behavior: "smooth", block: "center"});
+      } catch (err) {
+        resultDiv.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+      }
+    });
+
+    // small helper to avoid injecting raw HTML
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  })();
+</script>
+</body>
+</html>
