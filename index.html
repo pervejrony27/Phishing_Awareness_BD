@@ -1,3 +1,4 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,136 +21,153 @@
     .features-table td { padding:6px 8px; border-bottom:1px solid #eee; font-size:13px; }
     .error { color:#b00020; }
     .small-note { font-size:13px; color:#666; margin-top:6px; }
+    .spinner { display:inline-block; width:16px; height:16px; border:2px solid #ccc; border-top-color:#333; border-radius:50%; animation:spin 0.8s linear infinite; vertical-align:middle; margin-left:8px;}
+    @keyframes spin { to { transform: rotate(360deg); } }
+    input[type="text"]{ padding:8px; width:70%; max-width:600px; }
+    button.btn-primary{ padding:8px 12px; margin-left:8px; cursor:pointer; }
+    button[disabled]{ opacity:0.6; cursor:default; }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-      <div class="logo">Phishing Awareness BD</div>
-      <ul class="nav-links">
-          <li><a href="index.html" class="active">Home</a></li>
-          <li><a href="awareness.html">Awareness</a></li>
-          <li><a href="report.html">Report</a></li>
-          <li><a href="quiz.html">Quiz</a></li>
-          <li><a href="login.html">Login/signUp</a></li>
-      </ul>
-  </nav>
 
-  <!-- Hero Section -->
-  <section class="hero">
-      <h1>স্বাগতম Phishing Awareness BD-এ</h1>
-      <p>Learn to protect yourself from phishing scams in Bangladesh with reliable guides and reports.</p>
-      <div class="hero-buttons">
-          <a href="report.html" class="btn-primary">Report a Link</a>
-          <a href="quiz.html" class="btn-secondary">Take Quiz</a>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">Phishing Awareness BD</div>
+    <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="awareness.html">Awareness</a></li>
+        <li><a href="report.html">Report</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+
+        <?php if(isset($_SESSION['username'])): ?>
+            <li><a href="dashboard.php"><?php echo htmlspecialchars($_SESSION['username']); ?></a></li>
+        <?php else: ?>
+            <li><a href="login/login.html">Login/Signup</a></li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <h1>স্বাগতম Phishing Awareness BD-এ</h1>
+    <p>Learn to protect yourself from phishing scams in Bangladesh with reliable guides and reports.</p>
+    <div class="hero-buttons">
+        <a href="report.html" class="btn-primary">Report a Link</a>
+        <a href="quiz.html" class="btn-secondary">Take Quiz</a>
+    </div>
+</section>
+
+<!-- Scanner Section -->
+<section class="scanner-section" id="scanner">
+  <div class="container">
+    <div class="scanner-card">
+      <h2>Phishing Link Scanner</h2>
+      <p>Paste a suspicious URL below. The ML scanner will return a verdict, score, and learning tips in English &amp; বাংলা.</p>
+
+      <div class="scanner">
+        <input id="urlInput" type="text" placeholder="https://example.com/..." />
+        <button id="scanBtn" class="btn-primary">Scan Link</button>
+        <span id="spinnerWrap" style="display:none;"><span class="spinner" aria-hidden="true"></span><span class="small-note">Scanning...</span></span>
       </div>
-  </section>
 
-  <!-- Scanner Section -->
-  <section class="scanner-section" id="scanner">
-    <div class="container">
-      <div class="scanner-card">
-        <h2>Phishing Link Scanner</h2>
-        <p>Paste a suspicious URL below. The ML scanner will return a verdict, score, and learning tips in English &amp; বাংলা.</p>
+      <div id="result" class="result" aria-live="polite"></div>
 
-        <div class="scanner">
-          <input id="urlInput" type="text" placeholder="https://example.com/..." />
-          <button id="scanBtn" class="btn-primary">Scan Link</button>
-        </div>
-
-        <div id="result" class="result" aria-live="polite"></div>
-
-        <div class="notes small-note">
-          <strong>Note:</strong> This scanner uses a Machine Learning model (running locally). Keep the ML server running (python app.py).
-        </div>
+      <div class="notes small-note">
+        <strong>Note:</strong> This scanner uses a Machine Learning model (running locally). Keep the ML server running (python app.py).
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- features / awareness / other sections (unchanged) -->
-  <section class="features">
-      <h1 class="section-title">Phishing Awareness</h1>
-      <div class="feature-cards">
-          <div class="feature-card">
-              <h2><a href="awareness.html">Awareness</a></h2>
-              <p>Beware of messages asking for OTPs or banking info.</p>
-          </div>
-          <div class="feature-card">
-              <h2><a href="report.html">Report</a></h2>
-              <p>Check sender email carefully before clicking links.</p>
-          </div>
-          <div class="feature-card">
-              <h2><a href="quiz.html">Quiz</a></h2>
-              <p>Always verify URLs before entering sensitive info.</p>
-          </div>
-      </div>
-  </section>
+<!-- Features Section -->
+<section class="features">
+    <h1 class="section-title">Phishing Awareness</h1>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <h2><a href="awareness.html">Awareness</a></h2>
+            <p>Beware of messages asking for OTPs or banking info.</p>
+        </div>
+        <div class="feature-card">
+            <h2><a href="report.html">Report</a></h2>
+            <p>Check sender email carefully before clicking links.</p>
+        </div>
+        <div class="feature-card">
+            <h2><a href="quiz.html">Quiz</a></h2>
+            <p>Always verify URLs before entering sensitive info.</p>
+        </div>
+    </div>
+</section>
 
-  <footer>
-      &copy; 2025 Phishing Awareness BD | Made in Bangladesh
-  </footer>
+<footer>
+    &copy; 2025 Phishing Awareness BD | Made in Bangladesh
+</footer>
 
 <script>
 (function () {
   const scanBtn = document.getElementById("scanBtn");
   const urlInput = document.getElementById("urlInput");
   const resultDiv = document.getElementById("result");
+  const spinnerWrap = document.getElementById("spinnerWrap");
 
-  scanBtn.addEventListener("click", async () => {
-    const url = urlInput.value.trim();
-    if (!url) {
-      resultDiv.innerHTML = '<div class="error">Please enter a URL to scan.</div>';
-      return;
-    }
+  // escape HTML to avoid XSS
+  function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
 
+  // set UI while scanning
+  function startScanUI() {
+    scanBtn.disabled = true;
+    spinnerWrap.style.display = "inline-block";
     resultDiv.innerHTML = '<div class="small-note">Scanning…</div>';
+  }
+  function endScanUI() {
+    scanBtn.disabled = false;
+    spinnerWrap.style.display = "none";
+  }
 
+  async function doScan(url) {
+    startScanUI();
     try {
       const resp = await fetch("api/scan.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url })
       });
-
-      // If server returns non-JSON (HTML error), handle gracefully
       const text = await resp.text();
       let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        throw new Error("Server returned invalid response. Check ML API / PHP logs.");
-      }
+      try { data = JSON.parse(text); } catch(e) { throw new Error("Server returned invalid response."); }
 
       if (data.status !== "ok") {
         resultDiv.innerHTML = `<div class="error">${escapeHtml(data.error || "Unknown error")}</div>`;
         return;
       }
 
-      // render verdict
       let verdictClass = "safe";
       if (data.verdict === "Likely Phishing") verdictClass = "phishing";
       else if (data.verdict === "Suspicious") verdictClass = "suspicious";
 
+      let scoreDisplay = typeof data.score === "number" ? Math.round(data.score) : escapeHtml(String(data.score));
       let html = `<div><span class="label">Verdict:</span>
-                    <strong class="verdict ${verdictClass}">${escapeHtml(data.verdict)}</strong></div>`;
-      html += `<div class="small-note">Score: <strong>${escapeHtml(String(data.score))}</strong> (0–100)</div>`;
+                  <strong class="verdict ${verdictClass}">${escapeHtml(data.verdict)}</strong></div>`;
+      html += `<div class="small-note">Score: <strong>${scoreDisplay}</strong> (0–100)</div>`;
 
-      // Render reasons: bilingual (EN then BN)
       if (Array.isArray(data.reasons) && data.reasons.length) {
         html += `<div style="margin-top:10px"><strong>Why this is suspicious / কেন এটা সন্দেহজনক:</strong>`;
         html += `<ul class="result-list">`;
-        data.reasons.forEach(r => {
-          const en = r.en || "";
-          const bn = r.bn || "";
-          html += `<li>
-                    <div class="reason-en">${escapeHtml(en)}</div>
-                    <div class="reason-bn">${escapeHtml(bn)}</div>
-                   </li>`;
+        data.reasons.forEach(r=>{
+          const en = escapeHtml(r.en || "");
+          const bn = escapeHtml(r.bn || "");
+          html += `<li><div class="reason-en">${en}</div><div class="reason-bn">${bn}</div></li>`;
         });
         html += `</ul></div>`;
       }
 
-      // Optional: show features table (readable)
       if (data.features && typeof data.features === "object") {
         html += `<div style="margin-top:8px"><strong>Detected features:</strong>`;
         html += `<table class="features-table">`;
@@ -160,20 +178,30 @@
       }
 
       resultDiv.innerHTML = html;
-      resultDiv.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    } catch (err) {
+    } catch(err){
       resultDiv.innerHTML = `<div class="error">Error: ${escapeHtml(err.message)}</div>`;
+    } finally {
+      endScanUI();
+    }
+  }
+
+  scanBtn.addEventListener("click", () => {
+    const url = urlInput.value.trim();
+    if (!url) {
+      resultDiv.innerHTML = '<div class="error">Please enter a URL to scan.</div>';
+      return;
+    }
+    doScan(url);
+  });
+
+  // support pressing Enter
+  urlInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      scanBtn.click();
     }
   });
 
-  function escapeHtml(str) {
-    return String(str).replace(/&/g, "&amp;")
-                      .replace(/</g, "&lt;")
-                      .replace(/>/g, "&gt;")
-                      .replace(/"/g, "&quot;")
-                      .replace(/'/g, "&#039;");
-  }
 })();
 </script>
 </body>
